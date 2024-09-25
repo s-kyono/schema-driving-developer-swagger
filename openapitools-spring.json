@@ -1,0 +1,18 @@
+{
+  "generatorName": "spring",
+  "inputSpec": "/workspace/open-api.yml",
+  "output": "/workspace/output/typescript/java/",
+  "additinalProperties": {
+    "invokerPackage": "com.example.invoker",
+    "groupId": "com.example",
+    "artifatcId": "example-api-client",
+    "artifactVersion": "1.0.0",
+    "dateLirary": "java21",
+    "interfaceOnly": true,
+    "useTags": true,
+    "useBeanValidation": true,
+    "configPackage": "com.example.config",
+    "basePackage": "com.example.api",
+    "hideGenerationTimestamp": true
+  }
+}
