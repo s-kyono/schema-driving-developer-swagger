@@ -8,7 +8,7 @@ info:
     That way, with time, we can improve the API in general, and expose some of the new features in OAS3.
 
     _If you're looking for the Swagger 2.0/OAS 2.0 version of Petstore, then click [here](https://editor.swagger.io/?url=https://petstore.swagger.io/v2/swagger.yaml). Alternatively, you can load via the `Edit > Load Petstore OAS 2.0` menu option!_
-    
+
     Some useful links:
     - [The Pet Store repository](https://github.com/swagger-api/swagger-petstore)
     - [The source API definition for the Pet Store](https://github.com/swagger-api/swagger-petstore/blob/master/src/main/resources/openapi.yaml)
@@ -23,6 +23,7 @@ externalDocs:
   description: Find out more about Swagger
   url: http://swagger.io
 servers:
+  - url: http://localhost:4010/
   - url: https://petstore3.swagger.io/api/v3
 tags:
   - name: pet
@@ -64,7 +65,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Pet'          
+                $ref: '#/components/schemas/Pet'
             application/xml:
               schema:
                 $ref: '#/components/schemas/Pet'
@@ -103,7 +104,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Pet'          
+                $ref: '#/components/schemas/Pet'
             application/xml:
               schema:
                 $ref: '#/components/schemas/Pet'
@@ -143,7 +144,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Pet'          
+                  $ref: '#/components/schemas/Pet'
             application/xml:
               schema:
                 type: array
@@ -180,7 +181,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Pet'          
+                  $ref: '#/components/schemas/Pet'
             application/xml:
               schema:
                 type: array
@@ -213,7 +214,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Pet'          
+                $ref: '#/components/schemas/Pet'
             application/xml:
               schema:
                 $ref: '#/components/schemas/Pet'
@@ -391,7 +392,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Order'          
+                $ref: '#/components/schemas/Order'
             application/xml:
               schema:
                 $ref: '#/components/schemas/Order'
@@ -467,7 +468,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/User'          
+                $ref: '#/components/schemas/User'
             application/xml:
               schema:
                 $ref: '#/components/schemas/User'
@@ -547,7 +548,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/User'          
+                $ref: '#/components/schemas/User'
             application/xml:
               schema:
                 $ref: '#/components/schemas/User'
@@ -601,6 +602,46 @@ paths:
           description: Invalid username supplied
         '404':
           description: User not found
+  /value:
+    get:
+      description: ''
+      operationId: 'Value'
+      responses:
+        '200':
+          description: successful operation
+          headers:
+            X-Rate-Limit:
+              description: calls per hour allowed by the user
+              schema:
+                type: integer
+                format: int32
+            X-Expires-After:
+              description: date in UTC when token expires
+              schema:
+                type: string
+                format: date-time
+          content:
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Value'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Value'
+        '400':
+          description: Invalid username/password supplied
+    post:
+      description: ''
+      requestBody:
+        description: Update an existent pet in the store
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/requestBodies/Pet'
+        required: true
+
+      responses:
+        '200':
+          description: OK
 components:
   schemas:
     Order:
@@ -773,6 +814,16 @@ components:
           type: string
       xml:
         name: '##default'
+    Value:
+      type: object
+      properties:
+        value1:
+          type: integer
+          example: 198772
+        value2:
+          type: string
+          example: 'Value Test2'
+
   requestBodies:
     Pet:
       description: Pet object that needs to be added to the store
