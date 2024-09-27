@@ -1,0 +1,9 @@
+{
+    "generatorName": "typescript-fetch",
+    "inputSpec": "/workspace/open-api.yml",
+    "output": "/workspace/output/typescript/fetch",
+    "additinalProperties": {
+        "supportsES6": true,
+        "WithSeparateModelsAndApi": true
+    }
+}
