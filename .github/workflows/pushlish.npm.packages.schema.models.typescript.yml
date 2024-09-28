@@ -20,24 +20,35 @@ jobs:
           ref: ${{ github.event.inputs.tag }}
 
       - name: Verify Git tag
-        run:
-          git describe
+        run: git describe
 
-          # 一旦保留
-# - name: Setup Node.js
-#   uses: actions/setup-node
-#   with:
-#     node-version-file: './.node-version'
-#     registry-url: https://npm.pkg.github.com
-#     scope: '@wintyo-github-packages'
+      - name: Setup Docker Buildx
+        uses: docker/setup-buildx-action@v3
 
-# - name: Install
-#   run: yarn install
+      - name: Cache Docker layers
+        uses: actions/cache@v2
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-buildx-${{ github.sha }}
+          restore-keys: ${{ runner.os }}-buildx-
 
-# - name: Build
-#   run: yarn build
+      - name: WorkSpaceDirectory
+        run: ls -la ${{ github.workspace }}
 
-# - name: Publish npm package
-#   run: yarn publish
-#   env:
-#     NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build Docker Image
+        run: docker build ${{ github.workspace }}/Dockerfile.ci -t openapi-tools:latest
+
+      - name: Run Docker Container
+        run: docker run --name openapi-generator -d -v ${{ github.workspace }} :/workspace openapi-tools:latest
+
+      - name: Verify Docker Container
+        run: docker ps -a
+
+      - name: Run Docker Exec Open API Generator Typescript Axios
+        run: docker exec openapi-generator openapi-generator-cli generate -c /workspace/openapitools-axios.json -o /workspace/output/typescript/axios
+
+      - name: Run Docker Exec Open API Generator Typescript Fetcher
+        run: docker exec openapi-generator openapi-generator-cli generate -c /workspace/openapitools-fetch.json -o /workspace/output/typescript/fetch
+
+      - name: Verify After Generation Schema Files
+        run: ls -la ${{ github.workspace }}/output/typescript
