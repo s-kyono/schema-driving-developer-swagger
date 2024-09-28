@@ -32,17 +32,13 @@ jobs:
           key: ${{ runner.os }}-buildx-${{ github.sha }}
           restore-keys: ${{ runner.os }}-buildx-
 
-      - name: WorkSpaceDirectory
-        run: ls -la ${{ github.workspace }}
-
       - name: Build Docker Image
-        run: docker build ${{ github.workspace }}/Dockerfile.ci -t openapi-tools:latest
-
+        run: docker build --file ./Dockerfile.ci --tag openapi-tools:latest .
       - name: Run Docker Container
-        run: docker run --name openapi-generator -d -v ${{ github.workspace }} :/workspace openapi-tools:latest
+        run: docker run --name openapi-generator -d -v ./:/workspace openapi-tools
 
       - name: Verify Docker Container
-        run: docker ps -a
+        run: docker ps
 
       - name: Run Docker Exec Open API Generator Typescript Axios
         run: docker exec openapi-generator openapi-generator-cli generate -c /workspace/openapitools-axios.json -o /workspace/output/typescript/axios
@@ -51,4 +47,4 @@ jobs:
         run: docker exec openapi-generator openapi-generator-cli generate -c /workspace/openapitools-fetch.json -o /workspace/output/typescript/fetch
 
       - name: Verify After Generation Schema Files
-        run: ls -la ${{ github.workspace }}/output/typescript
+        run: ls -la ./output/typescript
