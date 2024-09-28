@@ -36,7 +36,7 @@ jobs:
         run: ls -la ${{ github.workspace }}
 
       - name: Build Docker Image
-        run: docker build ${{ github.workspace }}/Dockerfile.ci -t openapi-tools:latest
+        run: docker build ./Dockerfile.ci -t openapi-tools:latest
 
       - name: Run Docker Container
         run: docker run --name openapi-generator -d -v ${{ github.workspace }} :/workspace openapi-tools:latest
