@@ -41,3 +41,6 @@ RUN npm install -g  @stoplight/prism-cli @openapitools/openapi-generator-cli
 
 # 作業ディレクトリ設定
 WORKDIR /workspace
+
+# コンテナが起動したときにPrismモックサーバを起動 (コンテナ永続化対応)
+CMD ["prism", "mock", "/workspace/open-api.yml", "-h", "0.0.0.0"]

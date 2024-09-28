@@ -40,14 +40,11 @@ jobs:
       - name: Verify Docker Container
         run: docker ps
 
-      - name: Log Docker Container
-        run: docker logs openapi-generator
+      - name: Run Docker Exec Open API Generator Typescript Axios
+        run: docker exec openapi-generator openapi-generator-cli generate -c /workspace/openapitools-axios.json -o /workspace/output/typescript/axios
 
-      # - name: Run Docker Exec Open API Generator Typescript Axios
-      #   run: docker exec openapi-generator openapi-generator-cli generate -c /workspace/openapitools-axios.json -o /workspace/output/typescript/axios
+      - name: Run Docker Exec Open API Generator Typescript Fetcher
+        run: docker exec openapi-generator openapi-generator-cli generate -c /workspace/openapitools-fetch.json -o /workspace/output/typescript/fetch
 
-      # - name: Run Docker Exec Open API Generator Typescript Fetcher
-      #   run: docker exec openapi-generator openapi-generator-cli generate -c /workspace/openapitools-fetch.json -o /workspace/output/typescript/fetch
-
-      # - name: Verify After Generation Schema Files
-      #   run: ls -la ./output/typescript
+      - name: Verify After Generation Schema Files
+        run: ls -la ./output/typescript
