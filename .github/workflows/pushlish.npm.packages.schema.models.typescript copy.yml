@@ -1,0 +1,38 @@
+name: Publish npm package
+
+# 手動起動
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Git tag to checkout'
+        required: true
+        default: 'v0.0.0'
+
+jobs:
+  pre_checkout_tag:
+    runs-on: ubuntu-22.04
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.inputs.tag }}
+# 一旦保留
+# - name: Setup Node.js
+#   uses: actions/setup-node
+#   with:
+#     node-version-file: './.node-version'
+#     registry-url: https://npm.pkg.github.com
+#     scope: '@wintyo-github-packages'
+
+# - name: Install
+#   run: yarn install
+
+# - name: Build
+#   run: yarn build
+
+# - name: Publish npm package
+#   run: yarn publish
+#   env:
+#     NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
