@@ -32,6 +32,9 @@ jobs:
           key: ${{ runner.os }}-buildx-${{ github.sha }}
           restore-keys: ${{ runner.os }}-buildx-
 
+      - name: WorkSpaceDirectory
+        run: ls -la ${{ github.workspace }}
+
       - name: Build Docker Image
         run: docker build ${{ github.workspace }}/Dockerfile.ci -t openapi-tools:latest
 
