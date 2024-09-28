@@ -1,13 +1,22 @@
 # Base Images Node v22
 FROM node:22-slim
 
-# apt package update && updarade npm install packages 
-RUN apt-get update && apt-get upgrade && \ 
+RUN apt-get update && apt-get upgrade && \
   apt-get install -y \
   lsb-release \
+  locales \
+  tzdata \
   wget && \
   rm -fr /var/lib/apt/lists/* && \
   apt-get clean && rm -fr /var/lib/apt/lists/*
+
+# Settin location
+RUN locale-gen ja_JP.UTF-8
+
+ENV LANG=ja_JP.UTF-8
+ENV LANGUAGE=ja_JP:ja
+ENV LC_ALL=ja_JP.UTF-8
+
 
 # OpenJDK21
 RUN wget https://download.java.net/java/GA/jdk21.0.2/f2283984656d49d69e91c558476027ac/13/GPL/openjdk-21.0.2_linux-x64_bin.tar.gz && \

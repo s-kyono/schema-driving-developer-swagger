@@ -629,19 +629,6 @@ paths:
                 $ref: '#/components/schemas/Value'
         '400':
           description: Invalid username/password supplied
-    post:
-      description: ''
-      requestBody:
-        description: Update an existent pet in the store
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/requestBodies/Pet'
-        required: true
-
-      responses:
-        '200':
-          description: OK
 components:
   schemas:
     Order:
@@ -823,25 +810,6 @@ components:
         value2:
           type: string
           example: 'Value Test2'
-
-  requestBodies:
-    Pet:
-      description: Pet object that needs to be added to the store
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Pet'
-        application/xml:
-          schema:
-            $ref: '#/components/schemas/Pet'
-    UserArray:
-      description: List of user object
-      content:
-        application/json:
-          schema:
-            type: array
-            items:
-              $ref: '#/components/schemas/User'
   securitySchemes:
     petstore_auth:
       type: oauth2
