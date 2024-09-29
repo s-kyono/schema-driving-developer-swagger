@@ -105,6 +105,7 @@ jobs:
         run: |
           cd ./output/typescript
           ls -la ./
+          npm config list
           npm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
