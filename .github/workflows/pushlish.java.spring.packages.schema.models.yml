@@ -1,0 +1,120 @@
+name: Publish Java Spring Boot packages
+
+# 手動起動
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Git tag to checkout'
+        required: true
+        default: 'v0.0.0'
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  generate_publish_java_spring_boot:
+    runs-on: ubuntu-22.04
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.inputs.tag }}
+
+      - name: Verify Git tag
+        run: git describe
+
+      - name: Setup JDK
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'adopt'
+          java-version: '21'
+
+      - name: Setup Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Cache Docker layers
+        uses: actions/cache@v2
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-buildx-${{ github.sha }}
+          restore-keys: ${{ runner.os }}-buildx-
+
+      - name: Build Docker Image
+        run: docker build --file ./Dockerfile.ci --tag openapi-tools:latest .
+      - name: Run Docker Container
+        run: docker run --name openapi-generator -d -v ./:/workspace openapi-tools
+
+      - name: Verify Docker Container
+        run: docker ps
+
+      - name: Run Docker Exec Open API Generator SpringBoot
+        run: docker exec openapi-mock-server openapi-generator-cli generate -c /workspace/openapitools-spring.json -o /workspace/output/java
+
+      - name: Run Docker Exec Set Directory Permissions
+        run: docker exec openapi-generator chmod -R 777 /workspace/output
+
+      - name: Verify After Generation Schema Files
+        run: ls -la ./output/java
+
+      - name: Create Gradle File
+        run: |
+          cd ./output/java
+          gradle wrapper
+          chmod +x gradlew
+
+      - name: Write Build Gradle
+        run: |
+          cd ./output/java
+          cat <<EOF> build.gradle
+          plugins {
+              id 'java'
+              id 'maven-publish'
+          }
+
+          group = 'com.example'
+          version = '${{ github.event.inputs.tag }}'
+
+          repositories {
+              mavenCentral()
+          }
+
+          dependencies {
+              implementation 'org.springframework.boot:spring-boot-starter-web'
+              testImplementation 'org.springframework.boot:spring-boot-starter-test'
+          }
+
+          publishing {
+              publications {
+                  mavenJava(MavenPublication) {
+                      from components.java
+                  }
+              }
+              repositories {
+                  maven {
+                      name = "GitHubPckages"
+                      url = uri("https://maven.pkg.github.com/s-kyono/schema-driving-developer-swagger")
+                      credentials {
+                          username = project.findProperty("grp.user") ?: System.getenv("GRP_USER")
+                          password = project.findProperty("grp.token") ?: System.getenv("GITHUB_TOKEN")
+                      }
+                  }
+              }
+          }
+          EOF
+
+      - name: Build with Gradle
+        run: |
+          cd ./output/java
+          ./gradlew build
+
+      - name: Publish To Github Packages
+        run: |
+          cd ./output/java
+          ./gradlew publish
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          MAVEN_USERNAME: ${{ secrets.GRP_USER }}
+          MAVEN_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
