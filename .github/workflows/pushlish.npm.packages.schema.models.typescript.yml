@@ -79,7 +79,7 @@ jobs:
           cat <<EOF> package.json
           {
             "name": "@s-kyono/schema-driving-developer-swagger",
-            "version": "${{ steps.git_version.outputs.version }}",
+            "version": "${{ github.event.inputs.tag }}",
             "description": "swagger schema type files",
             "main": "index.ts",
             "repository": {
