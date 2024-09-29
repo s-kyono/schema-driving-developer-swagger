@@ -57,11 +57,17 @@ jobs:
         run: docker exec openapi-generator chmod -R 777 /workspace/output
 
       - name: Verify After Generation Schema Files
-        run: ls -la ./output/java
+        run: |
+          ls -la ./output/java
+          cd ./output/java
+          pwd
 
       - name: Create Gradle File
         run: |
           cd ./output/java
+          ls -la
+          pwd
+
           gradle wrapper
           chmod +x gradlew
 
