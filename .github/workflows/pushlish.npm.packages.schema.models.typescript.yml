@@ -42,6 +42,11 @@ jobs:
       - name: Verify yarn Version
         run: yarn -v
 
+      - name: Create .npmrc File
+        run: |
+          echo "//npm.pkg.github.com/:_authToken=${{ github.event.inputs.tag }}" >> ~/.npmrc
+          echo "registry=https://npm.pkg.github.com/" >> ~/.npmrc
+
       - name: Setup Docker Buildx
         uses: docker/setup-buildx-action@v3
 
