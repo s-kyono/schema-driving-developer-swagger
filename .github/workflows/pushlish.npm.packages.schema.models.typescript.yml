@@ -102,6 +102,9 @@ jobs:
           EOF
 
       - name: Publish to Github Packages
-        run: npm publish
+        run: |
+          cd ./output/typescript
+          ls -la ./
+          npm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
