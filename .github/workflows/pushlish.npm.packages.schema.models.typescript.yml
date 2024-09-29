@@ -9,6 +9,10 @@ on:
         required: true
         default: 'v0.0.0'
 
+permissions:
+  contents: read
+  packages: write
+
 jobs:
   pre_checkout_tag:
     runs-on: ubuntu-22.04
@@ -21,6 +25,26 @@ jobs:
 
       - name: Verify Git tag
         run: git describe
+
+      - name: Determine version
+        id: git_version
+        run: echo "::set-output name=version::$(git describe --tags --always)"
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version-file: '.node-version'
+          registry-url: https://npm.pkg.github.com
+          scope: '@s-kyono'
+
+      - name: Verify Node Version
+        run: node -v
+
+      - name: Verify npm Version
+        run: node -v
+
+      - name: Verify npm Version
+        run: node -v
 
       - name: Setup Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -48,3 +72,34 @@ jobs:
 
       - name: Verify After Generation Schema Files
         run: ls -la ./output/typescript
+
+      - name: Preare package.json
+        run: |
+          cd ./output/typescript
+          cat <<EOF> package.json
+          {
+            "name": "@s-kyono/schema-driving-developer-swagger",
+            "version": "${{ steps.git_version.outputs.version }}",
+            "description": "swagger schema type files",
+            "main": "index.ts",
+            "repository": {
+              "type": "git",
+              "url": "https://github.com/s-kyono/schema-driving-developer-swagger.git"
+            },
+            "publishConfig": {
+              "registry": " https://npm.pkg.github.com"
+            },
+            "author": "s-kyono <https://github.com/s-kyono>",
+            "license": "MIT",
+            "devDependencies": {
+              "typescript": "5.^6.2",
+              "@types/node": "22.^9.0",
+              "axios": "1.^7.7"
+            }
+          }
+          EOF
+
+      - name: Publish to Github Packages
+        run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
