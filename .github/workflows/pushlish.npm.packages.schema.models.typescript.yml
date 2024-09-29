@@ -66,11 +66,11 @@ jobs:
       - name: Run Docker Exec Open API Generator Typescript Fetcher
         run: docker exec openapi-generator openapi-generator-cli generate -c /workspace/openapitools-fetch-api.json -o /workspace/output/typescript/fetch
 
+      - name: Run Docker Exec Set Directory Permissions
+        run: docker exec openapi-generator chmod -R 777 /workspace/output/output
+
       - name: Verify After Generation Schema Files
         run: ls -la ./output/typescript
-
-      - name: Set Directory Permissions
-        run: chmod -R 777 ./output
 
       - name: Preare package.json
         run: |
