@@ -59,17 +59,6 @@ jobs:
       - name: Verify After Generation Schema Files
         run: |
           ls -la ./output/java
-          cd ./output/java
-          pwd
-
-      - name: Create Gradle File
-        run: |
-          cd ./output/java
-          ls -la
-          pwd
-
-          gradle wrapper
-          chmod +x gradlew
 
       - name: Write Build Gradle
         run: |
@@ -110,6 +99,14 @@ jobs:
               }
           }
           EOF
+
+      - name: Create Gradle File
+        run: |
+          cd ./output/java
+          ls -la
+          pwd
+          gradle wrapper
+          chmod +x gradlew
 
       - name: Build with Gradle
         run: |
