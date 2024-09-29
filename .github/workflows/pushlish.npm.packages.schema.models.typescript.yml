@@ -62,8 +62,8 @@ jobs:
         run: ls -la ./output/typescript
 
       - name: Create .npmrc File
-        working-directory: /output/typescript
         run: |
+          cd ./output/typescript
           echo "//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}" >> .npmrc
           echo "@s-kyono:registry=https://npm.pkg.github.com" >> .npmrc
 
