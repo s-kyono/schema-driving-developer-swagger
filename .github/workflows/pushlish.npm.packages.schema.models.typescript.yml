@@ -67,7 +67,7 @@ jobs:
         run: docker exec openapi-generator openapi-generator-cli generate -c /workspace/openapitools-fetch-api.json -o /workspace/output/typescript/fetch
 
       - name: Run Docker Exec Set Directory Permissions
-        run: docker exec openapi-generator chmod -R 777 /workspace/output/output
+        run: docker exec openapi-generator chmod -R 777 /workspace/output
 
       - name: Verify After Generation Schema Files
         run: ls -la ./output/typescript
