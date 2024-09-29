@@ -44,7 +44,7 @@ jobs:
 
       - name: Create .npmrc File
         run: |
-          echo "//npm.pkg.github.com/:_authToken=${{ github.event.inputs.tag }}" >> ~/.npmrc
+          echo "//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}" >> ~/.npmrc
           echo "registry=https://npm.pkg.github.com/" >> ~/.npmrc
 
       - name: Setup Docker Buildx
