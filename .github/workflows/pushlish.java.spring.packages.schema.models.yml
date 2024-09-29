@@ -51,7 +51,7 @@ jobs:
         run: docker ps
 
       - name: Run Docker Exec Open API Generator SpringBoot
-        run: docker exec openapi-mock-server openapi-generator-cli generate -c /workspace/openapitools-spring.json -o /workspace/output/java
+        run: docker exec openapi-generator openapi-generator-cli generate -c /workspace/openapitools-spring.json -o /workspace/output/java
 
       - name: Run Docker Exec Set Directory Permissions
         run: docker exec openapi-generator chmod -R 777 /workspace/output
