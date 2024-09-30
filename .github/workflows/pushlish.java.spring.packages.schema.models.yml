@@ -60,45 +60,10 @@ jobs:
         run: |
           ls -la ./output/java
 
-      - name: Write Build Gradle
+      - name: Copy Build Gradle File
         run: |
-          cd ./output/java
-          cat <<EOF> build.gradle
-          plugins {
-              id 'java'
-              id 'maven-publish'
-          }
-
-          group = 'com.example'
-          version = '${{ github.event.inputs.tag }}'
-
-          repositories {
-              mavenCentral()
-          }
-
-          dependencies {
-              implementation 'org.springframework.boot:spring-boot-starter-web'
-              testImplementation 'org.springframework.boot:spring-boot-starter-test'
-          }
-
-          publishing {
-              publications {
-                  mavenJava(MavenPublication) {
-                      from components.java
-                  }
-              }
-              repositories {
-                  maven {
-                      name = "GitHubPckages"
-                      url = uri("https://maven.pkg.github.com/s-kyono/schema-driving-developer-swagger")
-                      credentials {
-                          username = project.findProperty("grp.user") ?: System.getenv("GRP_USER")
-                          password = project.findProperty("grp.token") ?: System.getenv("GITHUB_TOKEN")
-                      }
-                  }
-              }
-          }
-          EOF
+          cp /workspace/gradle/build.gradle /workspace/output/java/
+          cat /workspace/output/java/build.gradle
 
       - name: Create Gradle File
         run: |
