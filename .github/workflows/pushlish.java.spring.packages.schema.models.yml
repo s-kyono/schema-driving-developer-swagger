@@ -51,59 +51,27 @@ jobs:
         run: docker ps
 
       - name: Run Docker Exec Open API Generator SpringBoot
-        run: docker exec openapi-mock-server openapi-generator-cli generate -c /workspace/openapitools-spring.json -o /workspace/output/java
+        run: docker exec openapi-generator openapi-generator-cli generate -c /workspace/openapitools-spring.json -o /workspace/output/java
 
       - name: Run Docker Exec Set Directory Permissions
         run: docker exec openapi-generator chmod -R 777 /workspace/output
 
       - name: Verify After Generation Schema Files
-        run: ls -la ./output/java
+        run: |
+          ls -la ./output/java
+
+      - name: Copy Build Gradle File
+        run: |
+          cp /workspace/gradle/build.gradle /workspace/output/java/
+          cat /workspace/output/java/build.gradle
 
       - name: Create Gradle File
         run: |
           cd ./output/java
+          ls -la
+          pwd
           gradle wrapper
           chmod +x gradlew
-
-      - name: Write Build Gradle
-        run: |
-          cd ./output/java
-          cat <<EOF> build.gradle
-          plugins {
-              id 'java'
-              id 'maven-publish'
-          }
-
-          group = 'com.example'
-          version = '${{ github.event.inputs.tag }}'
-
-          repositories {
-              mavenCentral()
-          }
-
-          dependencies {
-              implementation 'org.springframework.boot:spring-boot-starter-web'
-              testImplementation 'org.springframework.boot:spring-boot-starter-test'
-          }
-
-          publishing {
-              publications {
-                  mavenJava(MavenPublication) {
-                      from components.java
-                  }
-              }
-              repositories {
-                  maven {
-                      name = "GitHubPckages"
-                      url = uri("https://maven.pkg.github.com/s-kyono/schema-driving-developer-swagger")
-                      credentials {
-                          username = project.findProperty("grp.user") ?: System.getenv("GRP_USER")
-                          password = project.findProperty("grp.token") ?: System.getenv("GITHUB_TOKEN")
-                      }
-                  }
-              }
-          }
-          EOF
 
       - name: Build with Gradle
         run: |
