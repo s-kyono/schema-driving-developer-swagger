@@ -62,7 +62,6 @@ jobs:
 
       - name: Copy Build Gradle File
         run: |
-          pwd
           cp /home/runner/work/schema-driving-developer-swagger/schema-driving-developer-swagger/gradle/build.gradle /home/runner/work/schema-driving-developer-swagger/schema-driving-developer-swagger/output/java/
           cat /home/runner/work/schema-driving-developer-swagger/schema-driving-developer-swagger/output/java//build.gradle
 
@@ -70,7 +69,6 @@ jobs:
         run: |
           cd ./output/java
           ls -la
-          pwd
           gradle wrapper
           chmod +x gradlew
 
@@ -86,3 +84,4 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GRP_USER: ${{ secrets.GRP_USER }}
+          PACKAGE_VERSION: ${{ github.event.inputs.tag }}
