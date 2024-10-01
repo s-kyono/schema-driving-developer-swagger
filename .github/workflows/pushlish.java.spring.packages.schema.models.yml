@@ -62,14 +62,13 @@ jobs:
 
       - name: Copy Build Gradle File
         run: |
-          cp /workspace/gradle/build.gradle /workspace/output/java/
-          cat /workspace/output/java/build.gradle
+          cp /home/runner/work/schema-driving-developer-swagger/schema-driving-developer-swagger/gradle/build.gradle /home/runner/work/schema-driving-developer-swagger/schema-driving-developer-swagger/output/java/
+          cat /home/runner/work/schema-driving-developer-swagger/schema-driving-developer-swagger/output/java//build.gradle
 
       - name: Create Gradle File
         run: |
           cd ./output/java
           ls -la
-          pwd
           gradle wrapper
           chmod +x gradlew
 
@@ -84,5 +83,5 @@ jobs:
           ./gradlew publish
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          MAVEN_USERNAME: ${{ secrets.GRP_USER }}
-          MAVEN_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
+          GRP_USER: ${{ secrets.GRP_USER }}
+          PACKAGE_VERSION: ${{ github.event.inputs.tag }}
