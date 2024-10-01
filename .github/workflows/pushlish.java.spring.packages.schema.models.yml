@@ -63,8 +63,8 @@ jobs:
       - name: Copy Build Gradle File
         run: |
           pwd
-          cp /workspace/gradle/build.gradle /workspace/output/java/
-          cat /workspace/output/java/build.gradle
+          cp /home/runner/work/schema-driving-developer-swagger/schema-driving-developer-swagger/gradle/build.gradle /home/runner/work/schema-driving-developer-swagger/schema-driving-developer-swagger/output/java/
+          cat /home/runner/work/schema-driving-developer-swagger/schema-driving-developer-swagger/output/java//build.gradle
 
       - name: Create Gradle File
         run: |
