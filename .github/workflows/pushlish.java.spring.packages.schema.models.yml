@@ -62,6 +62,7 @@ jobs:
 
       - name: Copy Build Gradle File
         run: |
+          pwd
           cp /workspace/gradle/build.gradle /workspace/output/java/
           cat /workspace/output/java/build.gradle
 
